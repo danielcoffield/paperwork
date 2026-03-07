@@ -1,0 +1,70 @@
+# your information goes under [user]
+#
+# paperwork can handle mapping to multiple PDF field names, e.g.,
+#   case_number = ["Case Number", "Index Number"]
+#
+# you can add fields, e.g.,
+#   client_home_phone = ["Home Phone"]
+#
+# you can add branches, e.g.,
+#   [paperwork.branch_3]
+#   template = "blank_paperwork/branch_3_template.pdf"
+#   output_name = "Another Document - {client_surname}.pdf"
+#
+#   [paperwork.branch_3.fields]
+#   organization = ["Some Organization"]
+#
+
+[user]
+name = "Franz Kafka" # your information goes here
+organization = "The Workers' Accident Insurance Institute"
+email = "kafka@gmail.com"
+phone = "304-555-3141"
+
+[paperwork.base]
+template = "blank_paperwork/ert_intake.pdf"
+output_name = "ERT Intake - {client_surname}.pdf"
+
+[paperwork.base.fields]
+client_name = ["Client Name"]
+client_ssn = ["SSN"]
+case_number = ["Case Number", "Index Number"]
+client_city = ["City"]
+client_state = ["State"]
+client_zip = ["ZIP"]
+client_dob = ["DOB"]
+client_language = ["Language"]
+client_phone = ["Phone"]
+client_email = ["Email"]
+client_rent = ["Monthly Rent"]
+staff_name = ["Staff Name"]
+current_date = ["Date5", "Date8", "Date1", "Date3"]
+
+[paperwork.branch_1]
+template = "blank_paperwork/hcr_request.pdf"
+output_name = "HCR Request - {client_surname}.pdf"
+
+[paperwork.branch_1.fields]
+organization = ["Requester Organization"]
+staff_name = ["Requester Name"]
+staff_email = ["Requester Email"]
+staff_phone = ["Requester Phone"]
+client_name = ["Client Name"]
+case_number = ["Case Number"]
+client_ssn = ["SSN"]
+start_date = ["Start Date"]
+end_date = ["End Date"]
+current_date = ["Date"]
+hcr_details = ["Details"]
+
+[paperwork.branch_2]
+template = "blank_paperwork/rent_history.pdf"
+output_name = "Rent History Request - {client_surname}.pdf"
+
+[paperwork.branch_2.fields]
+staff_name = ["Requester Name"]
+client_apartment_number = ["Client Apartment Number"]
+staff_address_line1 = ["Client Address Line 1"]
+staff_address_line2 = ["Client Address Line 2"]
+staff_phone = ["Requester Phone"]
+staff_email = ["Requester Email"]
