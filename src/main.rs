@@ -103,9 +103,14 @@ fn make_branch(
         return Ok(());
     }
 
+    let branches: Vec<String> = branch_docs
+        .iter()
+        .map(|i| var_to_print(&i.replace("_", " ")))
+        .collect();
+
     let selections = MultiSelect::with_theme(theme)
         .with_prompt("Select branch documents to make (space to select, enter to confirm)")
-        .items(&branch_docs)
+        .items(&branches)
         .interact()?;
 
     if selections.is_empty() {
