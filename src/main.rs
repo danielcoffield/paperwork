@@ -14,6 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let choices = vec![
         "New Base Document",
         "Make Branch Document",
+        "Add Case Note",
         "Exit Paperwork",
     ];
 
@@ -27,7 +28,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         match selection {
             0 => make_base(&config, &theme)?,
             1 => make_branch(&config, &theme)?,
-            2 => break,
+            2 => add_note(&config, &theme)?,
+            3 => break,
             _ => unreachable!(),
         }
     }
@@ -252,4 +254,40 @@ fn var_to_print(v: &str) -> String {
         })
         .collect::<Vec<String>>()
         .join(" ")
+}
+
+fn add_note(
+    _config: &config::Config,
+    theme: &ColorfulTheme,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let now = chrono::Local::now();
+    let date = format!("{}/{}/{}", now.month(), now.day(), now.year());
+
+    let client = Select::with_theme(theme)
+        .with_prompt("Select a client")
+        .items(&list_clients()?)
+        .default(0)
+        .interact()?;
+
+    let client_name = &list_clients()?[client];
+
+    let note: String = Input::with_theme(theme)
+        .with_prompt("Note")
+        .interact_text()?;
+
+    let to_append = format!("## {}\n{}\n---\n", date, note);
+
+    use std::io::Write;
+
+    fs::create_dir_all("notes")?;
+
+    let file_path = format! {"notes/{}.md", client_name.replace(" ", "_")};
+
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&file_path)?;
+    file.write_all(to_append.as_bytes())?;
+
+    Ok(())
 }
