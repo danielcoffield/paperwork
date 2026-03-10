@@ -51,7 +51,7 @@ fn make_base(
             continue;
         }
         let value: String = Input::with_theme(theme)
-            .with_prompt(field_name)
+            .with_prompt(var_to_print(&field_name.replace("_", " ")))
             .interact_text()?;
         fields.insert(field_name.to_string(), value);
     }
@@ -128,7 +128,7 @@ fn make_branch(
             println!("More information needed for {}:", branch_name);
             for field_name in missing_fields {
                 let value: String = Input::with_theme(theme)
-                    .with_prompt(&field_name)
+                    .with_prompt(var_to_print(&field_name.replace("_", " ")))
                     .interact_text()?;
                 client_fields.insert(field_name, value);
             }
@@ -234,4 +234,17 @@ fn is_user_data(field_name: &str) -> bool {
         field_name,
         "current_date" | "staff_name" | "staff_email" | "staff_phone" | "organization"
     )
+}
+
+fn var_to_print(v: &str) -> String {
+    v.split_whitespace()
+        .map(|word| {
+            let mut chars = word.chars();
+            match chars.next() {
+                None => String::new(),
+                Some(first) => first.to_uppercase().to_string() + chars.as_str(),
+            }
+        })
+        .collect::<Vec<String>>()
+        .join(" ")
 }
